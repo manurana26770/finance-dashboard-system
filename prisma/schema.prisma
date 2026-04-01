@@ -10,13 +10,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMINISTRATOR
+  ORCHESTRATOR
+  CONTROLLER_APPROVER
+  CLERK_SUBMITTER
+  ANALYST
+}
+
+enum StatusValue {
+  pending
+  active
+  suspended
+  inactive
+}
+
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  firstName String
-  lastName  String
-  role      String  @default("analyst")
-  isActive  Boolean @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  firstName        String
+  lastName         String
+  role             Role     @default(ANALYST)
+  roleId           Int      @default(4)
+  status           StatusValue @default(active)
+  isActive         Boolean  @default(true)
+  department       String?
+  reportingManager String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

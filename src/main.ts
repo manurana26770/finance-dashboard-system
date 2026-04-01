@@ -7,6 +7,8 @@ import { RequestValidationPipe } from './common/pipes/request-validation.pipe';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api/v1');
+
   app.useGlobalPipes(new RequestValidationPipe());
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new ApiResponseInterceptor());
