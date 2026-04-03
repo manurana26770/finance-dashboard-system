@@ -30,10 +30,13 @@ model User {
   email            String   @unique
   firstName        String
   lastName         String
+  passwordHash     String?
   role             Role     @default(ANALYST)
   roleId           Int      @default(4)
   status           StatusValue @default(active)
   isActive         Boolean  @default(true)
+  inviteTokenJti   String?
+  inviteExpiresAt  DateTime?
   department       String?
   reportingManager String?
   createdAt        DateTime @default(now())
