@@ -34,6 +34,11 @@ model User {
   avatarUrl        String?
   timezone         String?
   passwordHash     String?
+  refreshTokenHash String?
+  lastLoginAt      DateTime?
+  failedLoginAttempts Int   @default(0)
+  lockedUntil      DateTime?
+  sessionVersion   Int      @default(1)
   role             Role     @default(ANALYST)
   roleId           Int      @default(4)
   status           StatusValue @default(active)

@@ -293,6 +293,12 @@ export class UsersService {
       data: {
         status: nextStatus,
         isActive: nextStatus === StatusValue.active,
+        refreshTokenHash:
+          nextStatus === StatusValue.active ? user.refreshTokenHash : null,
+        sessionVersion:
+          nextStatus === StatusValue.active
+            ? user.sessionVersion
+            : user.sessionVersion + 1,
       },
     });
 
