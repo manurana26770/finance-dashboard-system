@@ -33,13 +33,16 @@ export class RequestValidationPipe extends ValidationPipe {
       ? `${parentPath}.${error.property}`
       : error.property;
 
-    const currentErrors = Object.values(error.constraints || {}).map((message) => ({
-      field: currentPath,
-      message,
-    }));
+    const currentErrors = Object.values(error.constraints || {}).map(
+      (message) => ({
+        field: currentPath,
+        message,
+      }),
+    );
 
-    const childErrors = (error.children || []).flatMap((child: ValidationError) =>
-      this.buildValidationErrors(child, currentPath),
+    const childErrors = (error.children || []).flatMap(
+      (child: ValidationError) =>
+        this.buildValidationErrors(child, currentPath),
     );
 
     return [...currentErrors, ...childErrors];

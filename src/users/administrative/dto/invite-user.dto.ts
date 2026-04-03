@@ -1,4 +1,11 @@
-import { IsEmail, IsInt, IsString, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsString,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class InviteUserDto {
   @IsEmail()

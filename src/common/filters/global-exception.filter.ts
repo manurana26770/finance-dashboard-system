@@ -25,11 +25,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
-      } else if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      } else if (
+        typeof exceptionResponse === 'object' &&
+        exceptionResponse !== null
+      ) {
         const errorResponse = exceptionResponse as Record<string, unknown>;
-        message = typeof errorResponse.message === 'string'
-          ? errorResponse.message
-          : message;
+        message =
+          typeof errorResponse.message === 'string'
+            ? errorResponse.message
+            : message;
         errors = errorResponse.errors;
       }
     } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {

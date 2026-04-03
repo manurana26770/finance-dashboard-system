@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ParsePositiveIntPipe } from '../../common/pipes/parse-positive-int.pipe';
 import { UsersService } from '../users.service';
 import { InviteUserDto } from './dto/invite-user.dto';

@@ -5,7 +5,11 @@ import * as nodemailer from 'nodemailer';
 export class InviteEmailService {
   private readonly logger = new Logger(InviteEmailService.name);
 
-  async sendInviteEmail(email: string, name: string, inviteLink: string): Promise<void> {
+  async sendInviteEmail(
+    email: string,
+    name: string,
+    inviteLink: string,
+  ): Promise<void> {
     const config = {
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
