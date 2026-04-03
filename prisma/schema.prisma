@@ -25,6 +25,18 @@ enum StatusValue {
   inactive
 }
 
+enum FinancialRecordType {
+  INCOME
+  EXPENSE
+}
+
+enum FinancialRecordStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DELETED
+}
+
 model User {
   id               Int      @id @default(autoincrement())
   email            String   @unique
@@ -47,6 +59,39 @@ model User {
   inviteExpiresAt  DateTime?
   department       String?
   reportingManager String?
+  createdRecords   FinancialRecord[] @relation("CreatedFinancialRecords")
+  approvedRecords  FinancialRecord[] @relation("ApprovedFinancialRecords")
+  deletedRecords   FinancialRecord[] @relation("DeletedFinancialRecords")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model FinancialRecord {
+  id          Int                 @id @default(autoincrement())
+  createdBy   Int
+  approvedBy  Int?
+  deletedBy   Int?
+  amount      Decimal             @db.Decimal(14, 2)
+  type        FinancialRecordType
+  status      FinancialRecordStatus @default(PENDING)
+  category    String
+  date        DateTime
+  notes       String?
+  description String?
+  approvedAt  DateTime?
+  deletedAt   DateTime?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  creator  User  @relation("CreatedFinancialRecords", fields: [createdBy], references: [id], onDelete: Cascade)
+  approver User? @relation("ApprovedFinancialRecords", fields: [approvedBy], references: [id], onDelete: SetNull)
+  deleter  User? @relation("DeletedFinancialRecords", fields: [deletedBy], references: [id], onDelete: SetNull)
+
+  @@index([createdBy])
+  @@index([approvedBy])
+  @@index([deletedBy])
+  @@index([createdBy, date])
+  @@index([createdBy, category])
+  @@index([createdBy, type])
+  @@index([createdBy, type, category, date])
 }

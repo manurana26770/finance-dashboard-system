@@ -4,17 +4,16 @@ import {
   Get,
   Patch,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Authenticated } from '../../common/decorators/access.decorator';
 import { AuthenticatedUser } from '../../auth/types/authenticated-user.type';
 import { UsersService } from '../users.service';
 import { ChangeMyPasswordDto } from './dto/change-my-password.dto';
 import { UpdateProfileMeDto } from './dto/update-profile-me.dto';
 
 @Controller('users/me')
-@UseGuards(JwtAuthGuard)
+@Authenticated()
 export class PersonalUsersController {
   constructor(private readonly usersService: UsersService) {}
 

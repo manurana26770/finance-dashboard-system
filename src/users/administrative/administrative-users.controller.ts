@@ -8,6 +8,8 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
+import { AuthorizeRoles } from '../../common/decorators/access.decorator';
 import { ParsePositiveIntPipe } from '../../common/pipes/parse-positive-int.pipe';
 import { UsersService } from '../users.service';
 import { InviteUserDto } from './dto/invite-user.dto';
@@ -16,6 +18,7 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 
 @Controller('users')
+@AuthorizeRoles(Role.ADMINISTRATOR)
 export class AdministrativeUsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from '../common/prisma.service';
+import { RolesGuard } from '../common/guards/roles.guard';
 import { AdministrativeUsersController } from './administrative/administrative-users.controller';
 import { InviteEmailService } from '../common/services/invite-email.service';
 import { PersonalUsersController } from './personal/personal-users.controller';
@@ -21,6 +22,6 @@ import { UsersService } from './users.service';
     AdministrativeUsersController,
     PersonalUsersController,
   ],
-  providers: [UsersService, PrismaService, InviteEmailService],
+  providers: [UsersService, PrismaService, InviteEmailService, RolesGuard],
 })
 export class UsersModule {}

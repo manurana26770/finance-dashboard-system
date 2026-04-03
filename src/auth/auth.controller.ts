@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { Authenticated } from '../common/decorators/access.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { LogoutDto } from './dto/logout.dto';
@@ -35,7 +35,7 @@ export class AuthController {
 	}
 
 	@Get('me')
-	@UseGuards(JwtAuthGuard)
+	@Authenticated()
 	me(@CurrentUser() user: AuthenticatedUser) {
 		return this.authService.getAuthContext(user.id);
 	}
