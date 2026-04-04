@@ -11,6 +11,7 @@ import {
 	Role,
 } from '@prisma/client';
 import { PrismaService } from '../common/prisma.service';
+import { DashboardCacheService } from '../dashboard/dashboard-cache.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
 import { CreateRecordDto, CreateRecordType } from './dto/create-record.dto';
 import {
@@ -26,10 +27,13 @@ import {
 
 @Injectable()
 export class TransactionsService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly dashboardCacheService: DashboardCacheService,
+	) {}
 
 	async createRecord(userId: number, dto: CreateRecordDto) {
-		return this.prisma.financialRecord.create({
+		const record = await this.prisma.financialRecord.create({
 			data: {
 				createdBy: userId,
 				amount: dto.amount,
@@ -40,6 +44,10 @@ export class TransactionsService {
 				notes: dto.notes?.trim() || null,
 			},
 		});
+
+		await this.dashboardCacheService.invalidateForUser(userId);
+
+		return record;
 	}
 
 	async listRecords(userId: number, query: ListRecordsQueryDto) {
@@ -219,6 +227,8 @@ export class TransactionsService {
 			},
 		});
 
+		await this.dashboardCacheService.invalidateForUser(record.createdBy);
+
 		return {
 			id: updated.id,
 			amount: updated.amount,
@@ -267,6 +277,8 @@ export class TransactionsService {
 				updatedAt: true,
 			},
 		});
+
+		await this.dashboardCacheService.invalidateForUser(record.createdBy);
 
 		return {
 			message: 'Record soft-deleted successfully',
