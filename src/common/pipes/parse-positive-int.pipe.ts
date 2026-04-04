@@ -3,9 +3,15 @@ import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 @Injectable()
 export class ParsePositiveIntPipe implements PipeTransform<string, number> {
   transform(value: string): number {
-    const parsed = Number(value);
+    const normalized = value?.trim();
 
-    if (!Number.isInteger(parsed) || parsed <= 0) {
+    if (!normalized || !/^[1-9]\d*$/.test(normalized)) {
+      throw new BadRequestException('id must be a positive integer');
+    }
+
+    const parsed = Number(normalized);
+
+    if (!Number.isSafeInteger(parsed) || parsed <= 0) {
       throw new BadRequestException('id must be a positive integer');
     }
 

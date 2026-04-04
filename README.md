@@ -50,11 +50,29 @@ copy .env.example .env
 npm run prisma:migrate:dev
 ```
 
+1. Seed test users for all roles.
+
+```bash
+npx prisma db seed
+```
+
 1. Start the application.
 
 ```bash
 npm run start:dev
 ```
+
+## Test Users
+
+These accounts are created by the Prisma seed script and are ready for login:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| ADMINISTRATOR | admin@test.dev | Admin@12345 |
+| ORCHESTRATOR | orchestrator@test.dev | Orchestrator@12345 |
+| CONTROLLER_APPROVER | controller@test.dev | Controller@12345 |
+| CLERK_SUBMITTER | clerk@test.dev | Clerk@12345 |
+| ANALYST | analyst@test.dev | Analyst@12345 |
 
 ## Administrator User APIs
 

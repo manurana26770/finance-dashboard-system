@@ -10,6 +10,13 @@ import {
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import {
+	ApiBearerAuth,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+} from '@nestjs/swagger';
+import {
 	Authenticated,
 	AuthorizeRoles,
 } from '../common/decorators/access.decorator';
@@ -23,11 +30,15 @@ import { TransactionsService } from './transactions.service';
 
 @Controller('records')
 @Authenticated()
+@ApiTags('Records')
+@ApiBearerAuth('access-token')
 export class TransactionsController {
 	constructor(private readonly transactionsService: TransactionsService) {}
 
 	@Post()
 	@AuthorizeRoles(Role.ORCHESTRATOR, Role.CLERK_SUBMITTER)
+	@ApiOperation({ summary: 'Create a financial record (orchestrator or clerk)' })
+	@ApiOkResponse({ description: 'Record created successfully' })
 	createRecord(
 		@CurrentUser() user: AuthenticatedUser,
 		@Body() createRecordDto: CreateRecordDto,
@@ -36,6 +47,8 @@ export class TransactionsController {
 	}
 
 	@Get()
+	@ApiOperation({ summary: 'List current user records with filters and pagination' })
+	@ApiOkResponse({ description: 'Records list returned' })
 	listRecords(
 		@CurrentUser() user: AuthenticatedUser,
 		@Query() query: ListRecordsQueryDto,
@@ -44,6 +57,9 @@ export class TransactionsController {
 	}
 
 	@Get(':id')
+	@ApiOperation({ summary: 'Get a single record by id' })
+	@ApiParam({ name: 'id', type: Number, description: 'Record id' })
+	@ApiOkResponse({ description: 'Record details returned' })
 	getRecordById(
 		@CurrentUser() user: AuthenticatedUser,
 		@Param('id', ParsePositiveIntPipe) id: number,
@@ -57,6 +73,9 @@ export class TransactionsController {
 		Role.CONTROLLER_APPROVER,
 		Role.CLERK_SUBMITTER,
 	)
+	@ApiOperation({ summary: 'Update a record by id with role-based field restrictions' })
+	@ApiParam({ name: 'id', type: Number, description: 'Record id' })
+	@ApiOkResponse({ description: 'Record updated successfully' })
 	updateRecord(
 		@CurrentUser() user: AuthenticatedUser,
 		@Param('id', ParsePositiveIntPipe) id: number,
@@ -67,6 +86,9 @@ export class TransactionsController {
 
 	@Delete(':id')
 	@AuthorizeRoles(Role.ADMINISTRATOR, Role.ORCHESTRATOR)
+	@ApiOperation({ summary: 'Soft-delete a record by id (administrator or orchestrator)' })
+	@ApiParam({ name: 'id', type: Number, description: 'Record id' })
+	@ApiOkResponse({ description: 'Record soft-deleted successfully' })
 	deleteRecord(
 		@CurrentUser() user: AuthenticatedUser,
 		@Param('id', ParsePositiveIntPipe) id: number,

@@ -11,7 +11,16 @@ export class RequestValidationPipe extends ValidationPipe {
     super({
       whitelist: true,
       forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      stopAtFirstError: false,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: false,
+      },
+      validationError: {
+        target: false,
+        value: false,
+      },
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
         const errors = validationErrors.flatMap((error) =>
           this.buildValidationErrors(error),
@@ -33,9 +42,11 @@ export class RequestValidationPipe extends ValidationPipe {
       ? `${parentPath}.${error.property}`
       : error.property;
 
+    const fieldLabel = currentPath || 'request';
+
     const currentErrors = Object.values(error.constraints || {}).map(
       (message) => ({
-        field: currentPath,
+        field: fieldLabel,
         message,
       }),
     );

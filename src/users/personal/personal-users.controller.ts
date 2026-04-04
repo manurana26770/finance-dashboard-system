@@ -5,6 +5,12 @@ import {
   Patch,
   Put,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Authenticated } from '../../common/decorators/access.decorator';
 import { AuthenticatedUser } from '../../auth/types/authenticated-user.type';
@@ -14,20 +20,28 @@ import { UpdateProfileMeDto } from './dto/update-profile-me.dto';
 
 @Controller('users/me')
 @Authenticated()
+@ApiTags('Users - Personal')
+@ApiBearerAuth('access-token')
 export class PersonalUsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get authenticated user profile' })
+  @ApiOkResponse({ description: 'Profile returned' })
   getMyProfile(@CurrentUser() user: AuthenticatedUser) {
     return this.usersService.getMyProfile(user.id);
   }
 
   @Patch()
+  @ApiOperation({ summary: 'Update authenticated user profile fields' })
+  @ApiOkResponse({ description: 'Profile updated' })
   updateMyProfile(@CurrentUser() user: AuthenticatedUser, @Body() updateProfileMeDto: UpdateProfileMeDto) {
     return this.usersService.updateMyProfile(user.id, updateProfileMeDto);
   }
 
   @Put('password')
+  @ApiOperation({ summary: 'Change authenticated user password' })
+  @ApiOkResponse({ description: 'Password updated successfully' })
   changeMyPassword(@CurrentUser() user: AuthenticatedUser, @Body() changeMyPasswordDto: ChangeMyPasswordDto) {
     return this.usersService.changeMyPassword(user.id, changeMyPasswordDto);
   }

@@ -10,7 +10,6 @@ import { Role, StatusValue, User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { AcceptInviteDto } from '../common/dto/accept-invite.dto';
-import { InviteEmailService } from '../common/services/invite-email.service';
 import { PrismaService } from '../common/prisma.service';
 import { InviteUserDto } from './administrative/dto/invite-user.dto';
 import { ListUsersQueryDto } from './administrative/dto/list-users-query.dto';
@@ -68,7 +67,6 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly inviteEmailService: InviteEmailService,
   ) {}
 
   async inviteUser(inviteUserDto: InviteUserDto) {
@@ -102,15 +100,10 @@ export class UsersService {
       { expiresIn: this.getInviteExpirySeconds() },
     );
 
-    await this.inviteEmailService.sendInviteEmail(
-      user.email,
-      `${user.firstName} ${user.lastName}`.trim(),
-      this.buildInviteLink(token),
-    );
-
     return {
       message: 'User invited successfully',
       inviteExpiresAt,
+      inviteToken: token,
       user: this.toResponse(user),
     };
   }
@@ -422,11 +415,5 @@ export class UsersService {
     } catch {
       throw new ForbiddenException('Invite token is invalid or expired');
     }
-  }
-
-  private buildInviteLink(token: string): string {
-    const frontendBaseUrl =
-      process.env.FRONTEND_BASE_URL || 'http://localhost:3000';
-    return `${frontendBaseUrl}/accept-invite?token=${encodeURIComponent(token)}`;
   }
 }
