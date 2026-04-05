@@ -45,22 +45,25 @@ export class AdministrativeUsersController {
         'Creates a pending user account, assigns an initial role, and issues an invite workflow so the user can activate their account.',
       behavior: [
         'Rejects duplicate emails.',
-        'Stores the account in pending status, generates an invite token, and sends the invite email through the configured email service.',
+        'Stores the account in pending status and generates an invite token.',
+        'Returns the invite token in the API response so the caller can deliver the onboarding link through its own channel.',
         'The created account cannot log in until the invite is accepted.',
       ],
       access: ['Requires `ADMINISTRATOR` role.'],
       flow: [
         'Administrator authenticates with `POST /auth/login`.',
         'Administrator calls this endpoint to create the pending account.',
+        'Caller uses the returned invite token to construct and deliver the activation link.',
         'Invited user completes onboarding with `POST /users/accept-invite`.',
       ],
       notes: [
-        'The response includes the created user summary and the invite expiration timestamp.',
+        'The response includes the created user summary, invite expiration timestamp, and invite token.',
+        'This implementation currently does not send email automatically.',
       ],
     }),
   })
   @ApiCreatedResponse({
-    description: 'User invite created successfully and invite token returned',
+    description: 'User invite created successfully and invite token returned for caller-managed delivery',
     schema: {
       example: {
         success: true,
