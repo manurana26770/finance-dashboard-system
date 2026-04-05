@@ -44,6 +44,10 @@ npm install
 copy .env.example .env
 ```
 
+For Redis configuration:
+- Use `REDIS_URL` for local and non-production environments.
+- In production (`NODE_ENV=production`), you can set `REDIS_URL_PRODUCTION` to override `REDIS_URL`.
+
 1. Run Prisma migrations.
 
 ```bash
@@ -60,6 +64,78 @@ npx prisma db seed
 
 ```bash
 npm run start:dev
+```
+
+## Docker Setup
+
+This repo can run as a full containerized stack with:
+
+- NestJS API
+- PostgreSQL
+- Redis
+
+### Files Added For Containerization
+
+- `Dockerfile`
+- `.dockerignore`
+- `docker-compose.yml`
+- `docker/api-entrypoint.sh`
+- `.env.docker.example`
+
+### Container Startup Behavior
+
+- The API container waits for PostgreSQL and Redis through Compose health checks.
+- On boot, the API container applies committed Prisma migrations before starting Nest.
+- The container runs `npx prisma migrate deploy`.
+- A real Prisma migration history is now committed under `prisma/migrations`.
+
+This is the correct deployment path for production. The container no longer falls back to `prisma db push`.
+
+### Run The Full Stack
+
+1. Copy the Docker environment template.
+
+```bash
+cp .env.docker.example .env.docker
+```
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.docker.example .env.docker
+```
+
+1. Build and start all services.
+
+```bash
+docker compose up --build
+```
+
+1. Open the API and docs.
+
+- API: `http://localhost:3000/api/v1`
+- Swagger: `http://localhost:3000/api/docs`
+
+### Seed Demo Data In Docker
+
+Run the seed profile in a separate command:
+
+```bash
+docker compose --profile seed up seed
+```
+
+That uses `prisma/seed.ts` and creates the demo users and sample records.
+
+### Stop The Stack
+
+```bash
+docker compose down
+```
+
+To also remove named volumes:
+
+```bash
+docker compose down -v
 ```
 
 ## Test Users
