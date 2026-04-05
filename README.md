@@ -3,17 +3,14 @@
 NestJS backend for a finance dashboard with JWT authentication, role-based access control, dashboard aggregation, record workflows, Redis-backed caching, and PostgreSQL persistence through Prisma.
 
 ## Live URLs
-
+- Public/live deployment: `http://13.233.33.81/api/docs`
 - Local API: `http://localhost:3000/api/v1`
 - Local Swagger docs: `http://localhost:3000/api/docs`
-- Public/live deployment: not defined in this repository
-
-If you have a deployed API URL, replace the public/live entry above with the actual production endpoint.
 
 ## Core Features
 
 - JWT access and refresh token authentication
-- Role-based access for `ADMINISTRATOR`, `ORCHESTRATOR`, `CONTROLLER_APPROVER`, `CLERK_SUBMITTER`, and `ANALYST`
+- Role-based access for `ADMINISTRATOR`, `ORCHESTRATOR(developer)`, `CONTROLLER_APPROVER`, `CLERK_SUBMITTER`, and `ANALYST`
 - User invitation and invite-acceptance onboarding flow
 - Personal profile and password management endpoints
 - Financial record CRUD with role-aware permissions
@@ -94,12 +91,6 @@ Important variables:
 - `JWT_SECRET`
 - `ACCESS_TOKEN_SECRET`
 - `REFRESH_TOKEN_SECRET`
-- `FRONTEND_BASE_URL`
-- `SMTP_HOST`
-- `SMTP_PORT`
-- `SMTP_USER`
-- `SMTP_PASS`
-- `MAIL_FROM`
 - `PORT`
 - `NODE_ENV`
 
