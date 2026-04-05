@@ -44,10 +44,6 @@ npm install
 copy .env.example .env
 ```
 
-For Redis configuration:
-- Use `REDIS_URL` for local and non-production environments.
-- In production (`NODE_ENV=production`), you can set `REDIS_URL_PRODUCTION` to override `REDIS_URL`.
-
 1. Run Prisma migrations.
 
 ```bash
@@ -140,15 +136,21 @@ docker compose down -v
 
 ## Test Users
 
-These accounts are created by the Prisma seed script and are ready for login:
+These accounts are the testing users used to validate the role-based flows.
+Use them to log in, create additional users, and test approval and dashboard behavior.
 
 | Role | Email | Password |
 | --- | --- | --- |
 | ADMINISTRATOR | admin@test.dev | Admin@12345 |
-| ORCHESTRATOR | orchestrator@test.dev | Orchestrator@12345 |
-| CONTROLLER_APPROVER | controller@test.dev | Controller@12345 |
-| CLERK_SUBMITTER | clerk@test.dev | Clerk@12345 |
-| ANALYST | analyst@test.dev | Analyst@12345 |
+| ORCHESTRATOR | orchestrator@test.dev | Admin@12345 |
+| CONTROLLER_APPROVER | controller@test.dev | Admin@12345 |
+| CLERK_SUBMITTER | clerk@test.dev | Admin@12345 |
+| ANALYST | analyst@test.dev | Admin@12345 |
+
+Notes:
+- The administrator account is the primary entry point for testers.
+- In the current test database setup, the non-admin role users were inserted with the same password hash as the administrator for convenience.
+- If you later run the fixed seed flow, these passwords may be reset to role-specific values from `prisma/seed.ts`.
 
 ## Administrator User APIs
 
