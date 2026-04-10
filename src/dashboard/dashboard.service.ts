@@ -67,7 +67,7 @@ export class DashboardService {
     await this.dashboardCacheService.invalidateForUser(userId);
   }
 
-  private async getOverview(
+  private async cgetOverview(
     scope: DashboardScopeContext,
     query: DashboardOverviewQueryDto,
   ) {
